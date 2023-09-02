@@ -187,12 +187,6 @@ tree:
 		tree > ./dirtree.txt
 ' >> ./"$PROJECT_NAME"/Makefile
 
-echo "
-## Make data
-data:
-		\$(PYTHON_INTERPRETER) src/$PROJECT_NAME/data/make_data.py
-" >> ./"$PROJECT_NAME"/Makefile
-
 echo '
 ######################
 #### HOUSEKEEPING ####
