@@ -1,0 +1,311 @@
+#!/usr/bin/env bash
+set -e # Exit script immediately on first error.
+
+# Author:       @JPK85
+# Script:       aq-minit     -- Initialize a new project
+# Arguments:    project name -- Name of the project
+# Usage:        ./aq-minit <project name>
+#               -- Alternatively, symlink to somewhere in $PATH
+#               -- e.g. ln -s /path/to/aq-minit /usr/local/bin/aq-minit
+#               -- Then you can call it from anywhere
+#               -- e.g. aq-minit <project name>
+# Date:         2023-04-18
+# Version:      0.1.0
+# Notes:        This script is the barebones version of the full script
+#               `aq-init` -- here, the `m` stands for `minimal`.
+#
+#               This script will create a new project directory with the this name into
+#               the current working directory. It will also create a basic Python
+#               project configuration with Poetry, a .env file for environment variables,
+#               a README.md file, a check_environment.py file for testing the environment
+#               setup, a makefile for building the project, and a .gitignore file for
+#               ignoring files in git.
+#
+#               This script will also create a LICENSE file if the project
+#               license is set to MIT or Unlicense.
+#
+#                                       !!! WARNING !!!
+#
+#               Use at your own risk -- This has not been properly tested and
+#               may not work as intended, not work at all, or even cause damage.
+#               Please only use this if you more or less understand what it does
+#               and does not do.
+#
+#                                       !!! WARNING !!!
+
+# Get project name from command line arg
+PROJECT=$1
+
+#### Sanity check project metadata ####
+
+# Define some basic sanity check functions
+# Sanity check function for project name
+check_project_name() {
+    local PROJECT=$1
+
+    # List of reserved words
+    local reserved_words=("test" "tests" "test_environment" "test_environment.py" "makefile" "Makefile" "makefile.py" "Makefile.py" "LICENSE" "LICENSE.txt" "LICENSE.md" "LICENSE.rst" "README" "README.txt" "README.md" "README.rst" "pyproject.toml" "setup.py" "requirements.txt" "requirements-dev.txt" "src" "dist" "build" "docs" ".git" "__init__.py" "__main__.py" ".gitignore" ".env" "docker-compose.yml" "main" "util" "common" "config")
+
+    # Check if project name is a reserved word
+    for word in "${reserved_words[@]}"; do
+        if [ "$PROJECT" == "$word" ]; then
+            echo "Error: Project name cannot be a reserved word."
+            echo "Please choose another project name."
+            exit 1
+        fi
+    done
+
+    # Check if project name is valid
+    if [ "$PROJECT" == "" ]; then
+        echo "Error: Project name cannot be empty."
+        echo "Please choose a project name."
+        exit 1
+    fi
+}
+
+# Safely create project directory
+create_project_dir() {
+    local PROJECT=$1
+    local SCRIPTPATH=$2
+
+    # Set path
+    local PROJECT_DIR="$SCRIPTPATH"/"$PROJECT"
+
+    # Check if project name is already taken (is directory or a file)
+    if [ -d "$PROJECT_DIR" ]; then
+        echo "Error: Project directory already exists or is a filename."
+        echo "Please choose another project name."
+        exit 1
+    fi
+
+    # Create the directory
+    mkdir "$PROJECT_DIR"
+
+    echo "$PROJECT_DIR"
+}
+
+echo "Initializing project ..."
+echo "Project name is $PROJECT"
+check_project_name "$PROJECT"
+
+# The below will resolve to the ORIGINAL PATH
+SCRIPTPATH="$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )" &> /dev/null && pwd -P )"
+
+# Get the path to current working directory
+CURRENT_WORKING_DIR="$(pwd)"
+
+PROJECT_DIR="$(create_project_dir "$PROJECT" "$SCRIPTPATH")"
+# cd to the project directory
+cd "$PROJECT_DIR" || exit
+
+## Check if poetry exists
+if ! command -v poetry &> /dev/null; then
+	# If it doesn't, fetch manual values
+	read -r -e -p "Name of your project: " PROJECT
+	read -r -e -p "Enter project version [default '0.1.0']: " -i "0.1.0" PROJECT_VERSION
+	DEFAUTHOR="$(git config user.name)"
+	DEFEMAIL="$(git config user.email)"
+	DEFAUTHOR="$DEFAUTHOR <$DEFEMAIL>"
+	read -r -e -p "Project author(s): " -i "$DEFAUTHOR" AUTHORS
+	read -r -e -p "Enter short project description: " DESCRIPTION
+	DEFPYTHON=$(python -c 'import platform; print(platform.python_version())')
+	read -r -e -p "Python version: " -i "$DEFPYTHON" PYTHON_VERSION
+	echo "Project license: "
+	select LICENSE in "MIT" "Unlicense" "Other"; do
+		case $LICENSE in
+			MIT) LICENSE="MIT"; break;;
+			Unlicense) LICENSE="Unlicense"; break;;
+			Other) LICENSE="Other"; break;;
+		esac
+	done
+else
+	HASPOETRY=true
+	# use Poetry to initialize
+	echo "Poetry found, initializing with Poetry..."
+
+    # The init defaults to the set project name on prompt
+    # This call only creates the pyproject.toml file
+	poetry init
+
+	#### Parse globals from initiated pyproject.toml file ####
+    new_project_name=$(grep name pyproject.toml | cut -d '"' -f 2)
+    echo "Project name on init is $PROJECT"
+    echo "Project name in pyproject.toml is $new_project_name"
+
+    # Sanity check project name changes
+    if [ "$PROJECT" != "$new_project_name" ]; then
+        echo "Project name has changed from $PROJECT to $new_project_name"
+        PROJECT="$new_project_name"
+        echo "Checking changed project name ... "
+        check_project_name "$PROJECT"
+        echo "Project name is OK, new name is '$PROJECT', continuing ..."
+        echo "Resetting path from '$PROJECT_DIR' to: '$SCRIPTPATH/$PROJECT'"
+        echo "Attempting to create new directory at reset path: $SCRIPTPATH/$PROJECT"
+        if [ -d "$SCRIPTPATH/$PROJECT" ]; then
+            echo "Error: Project directory already exists or is a filename."
+            echo "Please choose another project name."
+            exit 1
+        fi
+        mkdir "$SCRIPTPATH"/"$PROJECT"
+        echo "Moving pyproject.toml to new directory: $SCRIPTPATH/$PROJECT"
+        mv "$PROJECT_DIR"/pyproject.toml "$SCRIPTPATH/$PROJECT"/pyproject.toml
+        OLD_PROJECT_DIR="$PROJECT_DIR" # Set this here so we can check and delete it later
+        echo "Resetting PROJECT_DIR variable to $SCRIPTPATH/$PROJECT"
+        PROJECT_DIR="${SCRIPTPATH}/${PROJECT}"
+        echo "Changing working directory to $PROJECT_DIR"
+        echo "Cleaning previous project directory: $OLD_PROJECT_DIR"
+        # Check if directory exists
+        if [ -d "$OLD_PROJECT_DIR" ]; then
+            # Check if directory is empty
+            if [ "$(ls -A "$OLD_PROJECT_DIR")" ]; then
+                # Directory is not empty, ask for confirmation
+                read -p "Directory $OLD_PROJECT_DIR is not empty. Are you sure you want to delete it? [y/N] " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    rm -rf "${OLD_PROJECT_DIR:?}"
+                else
+                    echo "Directory not deleted. Check path: $OLD_PROJECT_DIR for remnants."
+                fi
+            else
+                # Directory is empty, proceed with deletion
+                rm -rf "${OLD_PROJECT_DIR:?}"
+            fi
+        else
+            echo "Directory $OLD_PROJECT_DIR does not exist."
+        fi
+
+        # rm -rf "${OLD_PROJECT_DIR:?}"
+        cd "$PROJECT_DIR" || exit
+    fi
+
+    parse_path="$SCRIPTPATH"/parse.py
+
+	# Parse pyproject.toml with python and return values from the parser
+    python "$parse_path" "$PROJECT"
+	# Source the variables from the parser into a temporary text file and
+    # remove the tmp file after processing
+	# shellcheck disable=1091
+	source "$PROJECT_DIR"/tmp.txt # source the tmp.txt file; shellcheck complains as this does not exist yet
+	rm "$PROJECT_DIR"/tmp.txt
+    # move the pyproject.toml file to the $SCRIPTPATH
+    mv "$PROJECT_DIR"/pyproject.toml "$SCRIPTPATH"/pyproject.toml
+fi
+
+# Set year for copyright
+YEAR=$(date +%Y)
+
+# Set creation date
+CREATED=$(date +%Y-%m-%d)
+
+
+echo "Project name is: $PROJECT"
+echo "Short project description: $PROJECT_DESCRIPTION"
+echo "Project authors are $AUTHORS"
+echo "Project license is $LICENSE"
+echo "Project version is $PROJECT_VERSION"
+echo "Python version is $PYTHON_VERSION"
+echo "Project created on $CREATED"
+
+#### Initialize project structure with Poetry ####
+
+# Make sure we're in the right directory
+cd "$SCRIPTPATH" || exit
+
+# Initialize project structure with poetry
+if [ "$HASPOETRY" ]; then
+	poetry new "$PROJECT" --src --name "$PROJECT"
+	# Delete pyproject.toml (from 'new' cmd) & replace with custom init
+	rm ./"$PROJECT"/pyproject.toml
+	mv ./pyproject.toml ./"$PROJECT"/pyproject.toml
+	# Set black as the isort profile on pyproject.toml
+	echo '
+[tool.isort]
+profile = "black"' >> ./"$PROJECT"/pyproject.toml
+    # Append extra paths to pyproject.toml for pyright config
+    python "$SCRIPTPATH"/pyright_ext_toml.py "$PROJECT" "$PYTHON_VERSION" "$PROJECT_DIR"
+
+else
+	#do stuff here
+	echo "Initializing project structure..."
+	mkdir ./"$PROJECT"
+	./setup.sh "$PROJECT" "$PROJECT_VERSION" "$AUTHORS" "$DESCRIPTION" "$LICENSE"
+fi
+
+# Check if directory was created successfully
+if [ ! -d "$PROJECT" ]; then
+        echo "Error: Project directory not created"
+        # Exit if fails (chances are rest won't work either otherwise)
+        exit 1
+fi # proceed if directory was created
+
+
+#### Create some files ####
+# Make sure we're still in SCRIPTPATH
+cd "$SCRIPTPATH" || exit
+
+# .env for setting environment variables
+"$SCRIPTPATH"/dotenv.sh "$PROJECT" "$SCRIPTPATH"
+
+# Overwrite default README.rst with custom one incl. license type
+"$SCRIPTPATH"/README.sh "$PROJECT" "$LICENSE" "$CREATED" "$PROJECT_DESCRIPTION"
+
+# Create test_environment.py for testing environment setup
+"$SCRIPTPATH"/test_env.sh "$PROJECT" "$PYTHON_VERSION"
+
+# Create makefile
+"$SCRIPTPATH"/minimake.sh "$PROJECT" "$PYTHON_VERSION" "$PROJECT_DESCRIPTION" "$AUTHORS"
+
+# Create .gitignore
+"$SCRIPTPATH"/gitignore.sh "$PROJECT"
+
+# Check for license type and print license text to LICENSE
+if [ "$LICENSE" == "MIT" ]; then
+        ./MIT.sh "$YEAR" "$AUTHORS" "$PROJECT"
+elif [ "$LICENSE" == "Unlicense" ]; then
+        ./Unlicense.sh "$PROJECT"
+else
+        echo "Only permissive 'MIT' and 'Unlicense' types are supported for automatic generation - for other license types please create LICENSE text manually."
+        echo "See more available license types at: https://choosealicense.com/"
+fi
+
+# #### Create directory structure ####
+#
+# First, make scripts directory
+mkdir "$SCRIPTPATH"/"$PROJECT"/scripts
+# Then move test_env.py to scripts
+mv "$SCRIPTPATH"/"$PROJECT"/test_env.py "$SCRIPTPATH"/"$PROJECT"/scripts/check_environment.py
+
+mkdir "$SCRIPTPATH"/"$PROJECT"/data # (.csv, .json, .gzip etc.) ALL data files are .gitignorable
+touch "$SCRIPTPATH"/"$PROJECT"/data/.gitkeep
+
+# Create __init__.py
+touch "$SCRIPTPATH"/"$PROJECT"/src/"$PROJECT"/__init__.py
+
+# Transfer dir from the project folder to our new project folder
+cd "$CURRENT_WORKING_DIR" || exit # Make sure we're in cwd
+
+# Set target directory to the new project folder
+NEW_PROJECT_DIR="$CURRENT_WORKING_DIR"/"$PROJECT"
+
+# Make a new subdirectory with the project name
+mkdir "$NEW_PROJECT_DIR"
+
+# Copy the project folder to the new project folder
+cp -Ra "$PROJECT_DIR"/. "$NEW_PROJECT_DIR" 
+
+# Move to SCRIPTPATH
+cd "$SCRIPTPATH" || exit
+
+# Delete the already copied project folder if it exists
+rm -rf "${PROJECT_DIR:?}"
+
+# cd back to the new project folder
+cd "$NEW_PROJECT_DIR" || exit
+
+# Initialize a local git repo
+git -C "$NEW_PROJECT_DIR" init
+
+# Add all files to git and commit
+git -C "$NEW_PROJECT_DIR" add .
+git -C "$NEW_PROJECT_DIR" commit -m "Initial commit" > /dev/null 2>&1
+
