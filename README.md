@@ -78,13 +78,13 @@ or using `wget` or `curl` from releases and unpacking with `tar`:
 
 First create a directory where you want to unpack the contents, cd into it, and then:
 
-`wget`:
+use either `wget`:
 
 ```bash
 wget https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
 ```
 
-`curl`:
+or `curl`:
 
 ```bash
 curl -LO https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
