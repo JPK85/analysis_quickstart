@@ -74,6 +74,21 @@ If you really want to risk trying it, it is recommended to test it first in a do
 git clone https://github.com/JPK85/analysis_quickstart
 ```
 
+or using `wget` or `curl` from releases and unpacking with `tar`:
+
+```bash
+# Using wget
+wget https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
+
+# Using curl
+curl -LO https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
+
+# Extract
+tar -xzf aq.tar.gz
+```
+
+Then
+
 `cd` to the project root and make the main script executable:
 
 ```bash
