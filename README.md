@@ -76,14 +76,23 @@ git clone https://github.com/JPK85/analysis_quickstart
 
 or using `wget` or `curl` from releases and unpacking with `tar`:
 
+First create a directory where you want to unpack the contents, cd into it, and then:
+
+`wget`:
+
 ```bash
-# Using wget
 wget https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
+```
 
-# Using curl
+`curl`:
+
+```bash
 curl -LO https://github.com/JPK85/analysis_quickstart/releases/download/v0.1.0/aq.tar.gz
+```
 
-# Extract
+And extract:
+
+```bash
 tar -xzf aq.tar.gz
 ```
 
