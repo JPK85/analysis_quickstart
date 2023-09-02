@@ -71,7 +71,7 @@ Some of these have fallback alternatives set, others do not.
 If you really want to risk trying it, it is recommended to test it first in a docker container or something before deploying anywhere real so that you're aware of how it works and what it might break. For the brave, to get started first clone the repo:
 
 ```bash
-git clone <repo_url>
+git clone https://github.com/JPK85/analysis_quickstart
 ```
 
 `cd` to the project root and make the main script executable:
