@@ -220,3 +220,8 @@ And for the lite-version we have a little less gunk:
 ## References & attributions
 
 - [cookiecutter data science template](https://drivendata.github.io/cookiecutter-data-science/) -- for the original idea, and the contents of the created .env file + the Makefile help function
+
+## License
+
+The Unlicense -- see [LICENSE](LICENSE) for details.
+
