@@ -219,7 +219,7 @@ clean:
 ######################
 
 ## Create fresh project environment
-create_env:
+create-env:
 ifeq (True,$(HAS_CONDA))
 		@echo "Detected conda, creating conda environment."
 		conda create --name $(PROJECT_NAME) python=$(PYTHON_VERSION)
@@ -229,7 +229,7 @@ else
 endif
 
 ## Test if environment is setup correctly
-test_env:
+test-env:
 		$(PYTHON_INTERPRETER) ./scripts/check_environment.py
 
 ## Write QUARTO environment variables to .env
