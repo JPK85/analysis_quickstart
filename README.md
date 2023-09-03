@@ -66,7 +66,7 @@ The created project templates will prioritize / prefer:
 
 Some of these have fallback alternatives set, others do not.
 
-## Usage
+## Installation | Setup
 
 If you really want to risk trying it, it is recommended to test it first in a docker container or something before deploying anywhere real so that you're aware of how it works and what it might break. For the brave, to get started first clone the repo:
 
@@ -123,6 +123,14 @@ or, for the lite-version:
 ```bash
 ln -s /path/to/repo/aq-minit /usr/local/bin/aq-minit
 ```
+
+## Usage
+
+Short quickstart visual demo of the usage:
+
+<video width="800" controls>
+  <source src="assets/demo.webm" type="video/webm">
+</video>
 
 The script will attempt to handle paths relative to the current working directory, so you can run the symlinked script from anywhere you have access to. `cd` into the desired parent folder of where you want your newfound project, and run:
 
