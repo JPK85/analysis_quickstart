@@ -126,6 +126,8 @@ ln -s /path/to/repo/aq-minit /usr/local/bin/aq-minit
 
 ## Usage
 
+![Demo](https://github.com/JPK85/analysis_quickstart/raw/master/assets/demo.gif)
+
 The script will attempt to handle paths relative to the current working directory, so you can run the symlinked script from anywhere you have access to. `cd` into the desired parent folder of where you want your newfound project, and run:
 
 ```bash
