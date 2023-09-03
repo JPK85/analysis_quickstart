@@ -126,12 +126,6 @@ ln -s /path/to/repo/aq-minit /usr/local/bin/aq-minit
 
 ## Usage
 
-Short quickstart visual demo of the usage:
-
-<video width="800" controls>
-  <source src="assets/demo.webm" type="video/webm">
-</video>
-
 The script will attempt to handle paths relative to the current working directory, so you can run the symlinked script from anywhere you have access to. `cd` into the desired parent folder of where you want your newfound project, and run:
 
 ```bash
