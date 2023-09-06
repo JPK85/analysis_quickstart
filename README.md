@@ -8,8 +8,8 @@ This is highly untested and will probably destroy everything inside your compute
 
 The repo contains two primary scripts for creating project templates:
 
-1. `project-init` -- creates a somewhat overkill project template with a bunch of submodules and a bunch of other stuff typical of model based analytics projects
-2. `project-minit` -- creates a minimal project template with a single module and a few other things, good for iterating on small scripts and such
+1. `aq-init` -- creates a somewhat overkill project template with a bunch of submodules and a bunch of other stuff typical of model based analytics projects
+2. `aq-minit` -- creates a minimal project template with a single module and a few other things, good for iterating on small scripts and such
 
 The ideal usage is to symlink the scripts to some `/bin/` so that you can call them from anywhere and create a new project wireframe at will, with some nice utilities and metadata based on some prompted details. This is heavily influenced by the [cookiecutter data science template](https://drivendata.github.io/cookiecutter-data-science/), with my attempt at this being more of a personalized version that better fits my own workflow and tooling.
 
