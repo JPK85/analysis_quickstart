@@ -43,6 +43,7 @@ def main():
     # Construct TOML content
     content = f"""
 [tool.pyright]
+pythonVersion = "{PYTHON_VERSION}"
 extraPaths = [
     "{extra_path}"
 ]
