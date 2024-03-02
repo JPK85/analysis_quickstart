@@ -105,4 +105,10 @@ references/
 reports/.quarto/
 
 # Mypy cache
-.mypy_cache/" > ./$PROJECT/.gitignore
+.mypy_cache/
+
+# Temporary .docx files
+~\$*.docx
+
+# Dirtree.txt
+dirtree.txt" > ./"$PROJECT"/.gitignore
