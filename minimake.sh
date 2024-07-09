@@ -66,9 +66,9 @@ printf '
 #### List dependencies and packages ####
 
 # Development dependencies
-DEVPCKGS := coverage pynvim pytest pytest-cov python-dotenv
+DEVPCKGS := coverage pynvim pytest pytest-cov python-dotenv black isort flake8
 # Standard dependencies
-PCKGS := numpy pandas openpyxl packaging toml black isort flake8
+PCKGS := packaging toml
 
 # Optional packages
 EXTRAS :=
