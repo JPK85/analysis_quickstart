@@ -13,7 +13,7 @@ set -e # Exit script immediately on first error.
 # Version:      0.1.0
 # Notes:        This script will create a new project directory with the this name into
 #               the current working directory. It will also create a basic Python
-#               project configuration with Poetry. It will also create a .env file for 
+#               project configuration with Poetry. It will also create a .env file for
 #               environment variables, a README.md file, a check_environment.py file for
 #               testing the environment setup, a makefile for building the project, and a
 #               .gitignore file for ignoring files in git.
@@ -34,6 +34,18 @@ set -e # Exit script immediately on first error.
 
 # Get project name from command line arg
 PROJECT=$1
+
+# Initialize PROJECT_DIR
+PROJECT_DIR=""
+
+# Trap errors and perform cleanup
+cleanup() {
+    if [ -n "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR" ]; then
+        echo "Cleaning up temporary project directory..."
+        rm -rf "${PROJECT_DIR:?}"
+    fi
+}
+trap cleanup ERR
 
 #### Sanity check project metadata ####
 
