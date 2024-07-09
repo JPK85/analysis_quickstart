@@ -19,4 +19,4 @@ setup(
 	license='$LICENSE',
 	packages=find_packages(),
 )
-" > ./$PROJECT_NAME/setup.py
+" > ./"$PROJECT_NAME"/setup.py
