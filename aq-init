@@ -238,7 +238,7 @@ exclude_lines = [
     "if __name__ == '\''__main__'\'':",
     "return NotImplemented",
     "raise NotImplementedError",
-    "print(",
+    "print",
     "logger.",
 ]' >> ./"$PROJECT"/pyproject.toml
     # Append extra paths to pyproject.toml for pyright config
