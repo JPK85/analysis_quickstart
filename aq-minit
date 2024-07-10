@@ -340,6 +340,12 @@ cd "$NEW_PROJECT_DIR" || exit
 # Initialize a local git repo
 git -C "$NEW_PROJECT_DIR" init
 
+# Write a .gitattributes file to ignore some languages
+echo '*.html linguist-generated
+*.tex linguist-generated
+*.ipynb linguist-generated
+Makefile linguist-vendored' > ./.gitattributes
+
 # Add all files to git and commit
 git -C "$NEW_PROJECT_DIR" add .
 git -C "$NEW_PROJECT_DIR" commit -m "Initial commit" > /dev/null 2>&1
