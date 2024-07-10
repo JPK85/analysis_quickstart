@@ -66,7 +66,7 @@ printf '
 #### List dependencies and packages ####
 
 # Development dependencies
-DEVPCKGS := coverage pynvim python-dotenv pytest pytest-cov black isort flake8 Sphinx
+DEVPCKGS := coverage pynvim pytest pytest-cov python-dotenv black isort flake8
 # Standard dependencies
 PCKGS := packaging toml
 
@@ -74,6 +74,21 @@ PCKGS := packaging toml
 EXTRAS :=
 
 #### Setup recipes ####
+
+## Bump project semantinc version with poetry
+bump-version:
+	@if [ -z "$(type)" ]; then \
+		echo "Error: type argument is required"; \
+		exit 1; \
+	fi
+	@poetry version $(type)
+	@python scripts/update_version.py
+	@echo "Version bumped ($(type)) and synced."
+
+## Sync package semantic version manually
+sync-version:
+	@python scripts/update_version.py
+	@echo "Version synced to __init__.py"
 
 ## Lock current dependencies
 lock: pyproject.toml

@@ -282,6 +282,9 @@ cd "$SCRIPTPATH" || exit
 # Create test_environment.py for testing environment setup
 "$SCRIPTPATH"/test_env.sh "$PROJECT" "$PYTHON_VERSION"
 
+# Create update_version.py for bumping versions in sync with poetry
+"$SCRIPTPATH"/update_version.sh "$PROJECT"
+
 # Create makefile
 "$SCRIPTPATH"/minimake.sh "$PROJECT" "$PYTHON_VERSION" "$PROJECT_DESCRIPTION" "$AUTHORS"
 
@@ -304,12 +307,14 @@ fi
 mkdir "$SCRIPTPATH"/"$PROJECT"/scripts
 # Then move test_env.py to scripts
 mv "$SCRIPTPATH"/"$PROJECT"/test_env.py "$SCRIPTPATH"/"$PROJECT"/scripts/check_environment.py
-
 mkdir "$SCRIPTPATH"/"$PROJECT"/data # (.csv, .json, .gzip etc.) ALL data files are .gitignorable
 touch "$SCRIPTPATH"/"$PROJECT"/data/.gitkeep
 
 # Create __init__.py
 touch "$SCRIPTPATH"/"$PROJECT"/src/"$PROJECT"/__init__.py
+
+# Same for update_version.py
+mv "$SCRIPTPATH"/"$PROJECT"/update_version.py "$SCRIPTPATH"/"$PROJECT"/scripts/update_version.py
 
 # Transfer dir from the project folder to our new project folder
 cd "$CURRENT_WORKING_DIR" || exit # Make sure we're in cwd

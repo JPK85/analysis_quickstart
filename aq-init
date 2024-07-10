@@ -284,6 +284,9 @@ cd "$SCRIPTPATH" || exit
 # Create test_environment.py for testing environment setup
 "$SCRIPTPATH"/test_env.sh "$PROJECT" "$PYTHON_VERSION"
 
+# Create update_version.py for bumping versions in sync with poetry
+"$SCRIPTPATH"/update_version.sh "$PROJECT"
+
 # Create makefile
 "$SCRIPTPATH"/makefile.sh "$PROJECT" "$PYTHON_VERSION" "$PROJECT_DESCRIPTION" "$AUTHORS"
 
@@ -303,6 +306,8 @@ fi
 # #### Create directory structure ####
 mkdir "$SCRIPTPATH"/"$PROJECT"/scripts
 mv "$SCRIPTPATH"/"$PROJECT"/test_env.py "$SCRIPTPATH"/"$PROJECT"/scripts/check_environment.py
+# Same for update_version.py
+mv "$SCRIPTPATH"/"$PROJECT"/update_version.py "$SCRIPTPATH"/"$PROJECT"/scripts/update_version.py
 mkdir "$SCRIPTPATH"/"$PROJECT"/assets # (.bib, .lua, .tex, .pdf, .png, .jpg, .gif etc.) anything required by other processes
 touch "$SCRIPTPATH"/"$PROJECT"/assets/.gitkeep
 mkdir "$SCRIPTPATH"/"$PROJECT"/data # (.csv, .json, .gzip etc.) ALL data files are .gitignorable
