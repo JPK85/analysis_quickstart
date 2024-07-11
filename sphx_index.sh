@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script for creating an index.rst file for a standard Sphinx project
 # Takes in PROJECT_NAME and CREATED DATE as arguments.

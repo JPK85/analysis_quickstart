@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
 # Script to write a conf.py file based on poetry configuration
 # For automatic doc generation by Sphinx.
 

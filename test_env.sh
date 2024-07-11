@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script for creating a .py file for environment testing
 # Takes in the project name and Python version as argument

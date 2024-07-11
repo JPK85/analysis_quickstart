@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # shellcheck disable=2140
 
 # Script for writing an .env file readable by python-dotenv to the project directory

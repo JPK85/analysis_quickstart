@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script to generate a makefile for the project
+
 # Takes in args:
 # $1 = name of the project
 # $2 = python version

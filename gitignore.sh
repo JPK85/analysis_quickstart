@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script for creating a .gitignore for a templated project
 # Takes in a project name as an argument

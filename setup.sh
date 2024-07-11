@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script for setting up setup.py in case Poetry does not exist for package handling
 # Takes in args: name, project version, author(s), description, and license information

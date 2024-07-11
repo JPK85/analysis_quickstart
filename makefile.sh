@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script to generate a makefile for the project
 # Takes in args:
@@ -8,8 +9,6 @@
 # Set variables
 PROJECT_NAME=$1
 PYTHON_VERSION=$2
-PROJECT_DESCRIPTION=$3
-AUTHORS=$4
 
 ########################
 #### BUILD MAKEFILE ####

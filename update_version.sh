@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Script for creating a .py file for updating project version
 # Takes in the project name as argument
