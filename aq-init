@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e # Exit script immediately on first error.
+set -euo pipefail
 
 # Author:       @JPK85
 # Script:       aq-init      -- Initialize a new project
