@@ -5,21 +5,23 @@ set -euo pipefail
 # Script:       aq-minit     -- Initialize a new project
 # Arguments:    project name -- Name of the project
 # Usage:        ./aq-minit <project name>
-#               -- Alternatively, symlink to somewhere in $PATH
-#               -- e.g. ln -s /path/to/aq-minit /usr/local/bin/aq-minit
-#               -- Then you can call it from anywhere
-#               -- e.g. aq-minit <project name>
+#
+#                   -- Alternatively, symlink to somewhere in $PATH
+#                   -- e.g. ln -s /path/to/aq-minit /usr/local/bin/aq-minit
+#                   -- Then you can call it from anywhere
+#                   -- e.g. aq-minit <project name>
+#
 # Date:         2023-04-18
 # Version:      0.1.0
 # Notes:        This script is the barebones version of the full script
 #               `aq-init` -- here, the `m` stands for `minimal`.
 #
-#               This script will create a new project directory with the this name into
-#               the current working directory. It will also create a basic Python
-#               project configuration with Poetry, a .env file for environment variables,
-#               a README.md file, a check_environment.py file for testing the environment
-#               setup, a makefile for building the project, and a .gitignore file for
-#               ignoring files in git.
+#               This script will create a new project directory with the this
+#               name into the current working directory. It will also create a
+#               basic Python project configuration with Poetry, a .env file for
+#               environment variables, a README.md file, a check_environment.py
+#               file for testing the environment setup, a makefile for building
+#               the project, and a .gitignore file for ignoring files in git.
 #
 #               This script will also create a LICENSE file if the project
 #               license is set to MIT or Unlicense.
@@ -27,9 +29,9 @@ set -euo pipefail
 #                                       !!! WARNING !!!
 #
 #               Use at your own risk -- This has not been properly tested and
-#               may not work as intended, not work at all, or even cause damage.
-#               Please only use this if you more or less understand what it does
-#               and does not do.
+#               may not work as intended, not work at all, or even cause
+#               damage. Please only use this if you more or less understand
+#               what it does and does not do.
 #
 #                                       !!! WARNING !!!
 
