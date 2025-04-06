@@ -143,7 +143,7 @@ else
 	poetry init
 
 	#### Parse globals from initiated pyproject.toml file ####
-    new_project_name=$(grep name pyproject.toml | cut -d '"' -f 2)
+    new_project_name=$(grep -m 1 '^name = ' pyproject.toml | cut -d '"' -f 2)
     echo "Project name on init is $PROJECT"
     echo "Project name in pyproject.toml is $new_project_name"
 
@@ -201,6 +201,10 @@ else
     # remove the tmp file after processing
 	# shellcheck disable=1091
 	source "$PROJECT_DIR"/tmp.txt # source the tmp.txt file; shellcheck complains as this does not exist yet
+    echo "Parsed (.txt) project name is: $PROJECT"
+    echo "Parsed (.txt) license is: $LICENSE"
+    echo "Parsed (.txt) authors: $AUTHORS"
+    echo "Parsed (.txt) version: $PROJECT_VERSION"
 	rm "$PROJECT_DIR"/tmp.txt
     # move the pyproject.toml file to the $SCRIPTPATH
     mv "$PROJECT_DIR"/pyproject.toml "$SCRIPTPATH"/pyproject.toml
@@ -212,6 +216,9 @@ YEAR=$(date +%Y)
 # Set creation date
 CREATED=$(date +%Y-%m-%d)
 
+if [ -z "$PROJECT_DESCRIPTION" ]; then
+    PROJECT_DESCRIPTION="No description provided"
+fi
 
 echo "Project name is: $PROJECT"
 echo "Short project description: $PROJECT_DESCRIPTION"
@@ -313,6 +320,7 @@ mkdir "$SCRIPTPATH"/"$PROJECT"/data # (.csv, .json, .gzip etc.) ALL data files a
 touch "$SCRIPTPATH"/"$PROJECT"/data/.gitkeep
 
 # Create __init__.py
+mkdir -p "$SCRIPTPATH"/"$PROJECT"/src/"$PROJECT"
 touch "$SCRIPTPATH"/"$PROJECT"/src/"$PROJECT"/__init__.py
 
 # Same for update_version.py
