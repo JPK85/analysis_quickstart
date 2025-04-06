@@ -2,6 +2,7 @@
 
 import sys
 import os
+import re
 
 # Get current working directory
 project_path = os.getcwd()
@@ -45,12 +46,16 @@ else:
 # Strip newlines and whitespace
 AUTHORS = AUTHORS.replace("\n", " ").replace("\r", "").strip()
 
-print("authors:", AUTHORS)
-PYTHON_VERSION = vardict["project"]["requires-python"]
-print("python:", PYTHON_VERSION)
+# Extract just the first version number match
+raw_python = vardict["project"]["requires-python"]
+match = re.search(r"\d+\.\d+", raw_python)
+PYTHON_VERSION = match.group(0) if match else "3.12"  # fallback default
 PROJECT_VERSION = vardict["project"]["version"]
-print("version:", PROJECT_VERSION)
 PROJECT = vardict["project"]["name"]
+
+print("authors:", AUTHORS)
+print("python:", PYTHON_VERSION)
+print("version:", PROJECT_VERSION)
 print("project name:", PROJECT)
 
 # LICENSE handling
