@@ -108,7 +108,7 @@ setup-all: setup setup-dev setup-extras
 setup:
 ifeq (True,$(HAS_POETRY))
 		@echo "Poetry found, using Poetry to install standard dependencies"
-		poetry install --only main
+		poetry install
 		@echo "Installing standard dependencies..."
 		$(foreach var,$(PCKGS),poetry add $(var);)
 else
